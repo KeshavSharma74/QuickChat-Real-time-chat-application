@@ -3,11 +3,14 @@ import http from "http"
 import "dotenv/config"
 import { connectDB } from "./lib/database.js";
 import cors from "cors"
+import cookieParser from "cookie-parser";
+import route from "./routes/user.route.js";
 
 const app=express();
 
 const server=http.createServer(app);
 
+app.use(cookieParser())
 app.use(cors())
 app.use(express.json({limit:"4mb"}));
 
@@ -18,6 +21,8 @@ server.listen(port,()=>{
 })
 
 connectDB();
+
+app.use('/api/v1',route);
 
 app.use('/api/status',(req,res)=>{
     return res.send("App is live");
