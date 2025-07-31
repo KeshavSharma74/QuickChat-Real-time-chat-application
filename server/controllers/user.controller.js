@@ -3,6 +3,7 @@ import { generateToken } from "../lib/util.js";
 import User from "../models/User.model.js";
 import "dotenv/config"
 import transporter from "../lib/nodemailer.js";
+import { WELCOME_EMAIL_TEMPLATE } from "../lib/emailTemplate.js";
 
 const signup = async(req,res)=>{
 
@@ -47,8 +48,8 @@ const signup = async(req,res)=>{
         from: process.env.SENDER_MAIL,
         to: email,
         subject: "Welcome to QuickChat",
-        text: `Welcome to QuickChat! Your account has been created with email id: ${email}`,
-        // html:WELCOME_EMAIL_TEMPLATE.replace("{{email}}",email).replace("{{name}}",name),
+        // text: `Welcome to QuickChat! Your account has been created with email id: ${email}`,
+        html:WELCOME_EMAIL_TEMPLATE.replace("{{email}}",email).replace("{{name}}",fullname),
         });
         
         return res.status(200).json({
