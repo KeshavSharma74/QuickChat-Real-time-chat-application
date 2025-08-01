@@ -5,6 +5,9 @@ export const protectRoute = async(req,res,next)=>{
 
     const {token}=req.cookies;
 
+    // console.log("token to milgya bhai");
+    
+
     try{
 
         if(!token){
@@ -27,6 +30,8 @@ export const protectRoute = async(req,res,next)=>{
 
         // console.log("ab mei user print krunga : ",user);
         req.user=user;
+
+        // console.log("mene to user details insrt krdi thi : ",req.user);
 
         next();
     }

@@ -4,7 +4,8 @@ import "dotenv/config"
 import { connectDB } from "./lib/database.js";
 import cors from "cors"
 import cookieParser from "cookie-parser";
-import route from "./routes/user.route.js";
+import userRoute from "./routes/user.route.js";
+import messageRoute from "./routes/message.route.js";
 
 const app=express();
 
@@ -22,7 +23,8 @@ server.listen(port,()=>{
 
 connectDB();
 
-app.use('/api/v1',route);
+app.use('/api/v1/auth',userRoute);
+app.use('/api/v1/message',messageRoute);
 
 app.use('/api/status',(req,res)=>{
     return res.send("App is live");

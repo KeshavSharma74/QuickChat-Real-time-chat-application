@@ -153,14 +153,14 @@ const updateProfile = async(req,res)=>{
 
         if(!profilePic){
 
-            updatedUser = await User.findByIdAndUpdate(userId,{fullname,bio},{new:true});
+            updatedUser = await User.findByIdAndUpdate(userId,{fullname,bio},{new:true}).select("-password");
 
         }
         else{
 
             const upload = cloudinary.uploader.upload(profilePic);
 
-            updatedUser = await User.findByIdAndUpdate(userId,{fullname,bio,profilePic:(await upload).secure_url},{new:true});
+            updatedUser = await User.findByIdAndUpdate(userId,{fullname,bio,profilePic:(await upload).secure_url},{new:true}).select("-password");
 
         }
 
