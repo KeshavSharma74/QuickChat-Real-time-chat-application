@@ -4,6 +4,7 @@ import User from "../models/User.model.js";
 import "dotenv/config"
 import transporter from "../lib/nodemailer.js";
 import { WELCOME_EMAIL_TEMPLATE } from "../lib/emailTemplate.js";
+import cloudinary from "../lib/cloudinary.js";
 
 const signup = async(req,res)=>{
 
@@ -122,4 +123,64 @@ const login = async(req,res)=>{
 
 }
 
-export {signup,login}
+const checkAuth = (req,res)=>{
+
+    // console.log(req.user);
+
+    return res.status(200).json({
+        success:true,
+        userData:req.user,
+        message:"Data fetched Successfully"
+    })
+}
+
+const updateProfile = async(req,res)=>{
+
+    const {profilePic,bio,fullname}=req.body;
+
+    try{
+
+        const userId=req.user._id;
+
+        if(!userId){
+            return res.status(400).json({
+                success:false,
+                message:"User is not logged in or token is not stored in the cookies"
+            })
+        }
+
+        let updatedUser;
+
+        if(!profilePic){
+
+            updatedUser = await User.findByIdAndUpdate(userId,{fullname,bio},{new:true});
+
+        }
+        else{
+
+            const upload = cloudinary.uploader.upload(profilePic);
+
+            updatedUser = await User.findByIdAndUpdate(userId,{fullname,bio,profilePic:(await upload).secure_url},{new:true});
+
+        }
+
+        return res.status(200).json({
+            success:true,
+            userData:updatedUser,
+            message:"Profile Updated Successfully.",
+        })
+
+    }
+    catch(error){
+
+        console.log(error);
+
+        return res.status(500).json({
+            success:false,
+            message:error.message,
+        })
+    }
+
+}
+
+export {signup,login,checkAuth,updateProfile}
