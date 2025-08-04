@@ -59,6 +59,6 @@ connectDB();
 app.use('/api/v1/auth', userRoute);
 app.use('/api/v1/message', messageRoute);
 
-app.use('/api/v1', (req, res) => {
+app.get('/', (req,res) => {
     return res.send("App is live");
 });

@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
-import assets from '../assets/assets'
+import React, { useState, useContext } from 'react';
+import assets from '../assets/assets';
+import AuthContext from '../context/authContext';
 
 const LoginPage = () => {
-
   const [currentState, setCurrentState] = useState("signup");
   const [dataSubmitted, setDataSumitted] = useState(false);
+
+  const { login } = useContext(AuthContext); // get login function from context
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,23 +16,37 @@ const LoginPage = () => {
   const changeState = () => {
     setCurrentState(currentState === "signup" ? "login" : "signup");
     setDataSumitted(false); // reset form state
-  }
+    setFullName("");
+    setEmail("");
+    setPassword("");
+    setBio("");
+  };
 
-  const handleButton = () => {
-    if (currentState === "signup") setDataSumitted(true);
-  }
+  const handleButton = async () => {
+    if (currentState === "signup") {
+      if (!dataSubmitted) {
+        setDataSumitted(true);
+      } else {
+        const credentials = { fullname: fullName, email, password, bio };
+        await login("signup", credentials);
+        setFullName("");
+        setEmail("");
+        setPassword("");
+        setBio("");
+        setDataSumitted(false);
+      }
+    } else {
+      const credentials = { email, password };
+      await login("login", credentials);
+      setEmail("");
+      setPassword("");
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Your submission logic here
-    console.log({
-      fullName,
-      email,
-      password,
-      bio
-    });
-    // After submit, you can reset form or show success
-  }
+    handleButton();
+  };
 
   return (
     <div className='flex backdrop-blur-[2rem] h-[100vh]'>
@@ -103,10 +119,10 @@ const LoginPage = () => {
           {/* Button */}
           <button
             type="submit"
-            onClick={handleButton}
             className='bg-gradient-to-r from-purple-400 to-violet-600 text-white border-none text-lg font-light py-2 px-20 rounded-lg cursor-pointer'
           >
-            {currentState === "signup" ? "Create Account" : "Login Now"}
+            {currentState === "signup" && !dataSubmitted ? "Next" :
+              currentState === "signup" ? "Create Account" : "Login Now"}
           </button>
 
           {/* Checkbox */}
@@ -126,7 +142,7 @@ const LoginPage = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;
