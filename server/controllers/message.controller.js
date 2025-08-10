@@ -117,7 +117,9 @@ const markMessageAsSeen = async(req,res)=>{
 
 const sendMessage = async(req,res)=>{
 
-    const {receiverId} = req.params.id;
+
+
+    const receiverId = req.params.id;
     const senderId = req.user._id;
     const {text,image}=req.body;
 
@@ -127,7 +129,7 @@ const sendMessage = async(req,res)=>{
         
         if(image){
             
-            const uploadResponse = cloudinary.uploader.upload(image);
+            const uploadResponse =await cloudinary.uploader.upload(image);
             imageUrl=uploadResponse.secure_url;
 
         }

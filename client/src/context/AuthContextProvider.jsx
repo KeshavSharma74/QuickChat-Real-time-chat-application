@@ -44,15 +44,15 @@ const AuthContextProvider = (props) => {
     };
 
     const login = async (state, credentials) => {
-        console.log("login call hogya");
-        console.log("login hogya call");
+        // console.log("login call hogya");
+        // console.log("login hogya call");
         
         try {
             const { data } = await axios.post(`/api/v1/auth/${state}`, credentials);
-            console.log("yahan tk agtya mei");
+            // console.log("yahan tk agtya mei");
             
             if(data.success) {
-                console.log("data successfult");
+                console.log("data successfully");
                 
                 setAuthUser(data.userData);
                 connectSocket(data.userData);
@@ -98,7 +98,7 @@ const AuthContextProvider = (props) => {
 
     useEffect(() => {
         checkAuth();
-    }, []);
+    },[]);
 
     const value = {
         authUser,
